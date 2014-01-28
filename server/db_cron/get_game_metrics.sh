@@ -16,9 +16,10 @@
 #    limitations under the License.
 # 
 
+source taskset.conf
 
 TIME=`date +%s`
 
 TIMESLOT=$((`date +%s`/1800))
 
-php -r "include 'server.cfg'; echo implode(' ',\$server_cfg['game_list']);" | xargs -n1 -P8 taskset -c 1-8 /usr/bin/php /usr/local/zperfmon/bin/get_game_metrics.php -t \{${TIMESLOT}\} -g
+php -r "include 'server.cfg'; echo implode(' ',\$server_cfg['game_list']);" | xargs -n1 -P8 $TASKSET_GROUP2 /usr/bin/php /usr/local/zperfmon/bin/get_game_metrics.php -t \{${TIMESLOT}\} -g

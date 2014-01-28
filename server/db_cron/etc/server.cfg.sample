@@ -114,5 +114,7 @@ $server_cfg = array(
 	"ZPERFMON_UPLOAD_URL" => "http://xxxx.xxxx.xxx/zperfmon/uploader.php",
 	"ZPERFMON_URL_PARAMS" => "P1,P2",
 	"zperfmon_add_game_mail_recipients" => "",
+	"taskset_group1" => "",
+	"taskset_group2" => ""	
 	);
 ?>

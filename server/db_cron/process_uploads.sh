@@ -15,5 +15,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 # 
+source taskset.conf
 
-php -r "include 'server.cfg'; echo implode(' ',\$server_cfg['game_list']);" | xargs -n1 -P8 taskset -c 1-8 /usr/bin/php /usr/local/zperfmon/bin/process_uploads.php -g
+php -r "include 'server.cfg'; echo implode(' ',\$server_cfg['game_list']);" | xargs -n1 -P8 $TASKSET_GROUP2 /usr/bin/php /usr/local/zperfmon/bin/process_uploads.php -g
