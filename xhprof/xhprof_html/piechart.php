@@ -84,7 +84,7 @@ function createPieChart(id, title, data) {
 		dt.push([data[ind]["name"], data[ind]["y"]]);
 	}
 
-	var data = google.visualization.arrayToDataTable(dt);
+	var data = google.visualization.arrayToDataTable(dt, true);
 
         var options = {title: title,
 		chartArea: {left:0, top:20, width:"90%",height:"90%"} };

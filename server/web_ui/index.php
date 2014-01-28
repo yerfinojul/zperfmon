@@ -236,7 +236,7 @@ EOF;
 
 	getGamesName();
 	getGamesMetrics();
-	google.load('visualization', '1', {'packages':['annotatedtimeline']});
+	google.load('visualization', '1', {'packages':['annotatedtimeline', 'table']});
 
 	function generateTabs(active_game, active_array) {
 		var tabList =new Array( 
