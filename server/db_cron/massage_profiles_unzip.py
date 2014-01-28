@@ -86,10 +86,10 @@ def un_tarbzip(server_cfg):
     #
     try:
         marker_file =  server_cfg.upload_path + "/.profiles"
-	tmp_marker_file = server_cfg.upload_path + "/.profiles.tmp"
-	os.rename(marker_file, tmp_marker_file)
+        tmp_marker_file = server_cfg.upload_path + "/.profiles.tmp"
+        os.rename(marker_file, tmp_marker_file)
         files_to_process = open(tmp_marker_file).read().split(",")
-	# print files_to_process
+        # print files_to_process
     except:
         syslog.syslog("Either marker file is not there or problem in renaming of marker file") 
         sys.exit(0)
@@ -122,9 +122,9 @@ def un_tarbzip(server_cfg):
                 
             dirs = map(lambda a: dirname(a), filter(lambda x: x.find(':xhprof') != -1 , t.getnames()))
             upload_path = set(dirs).pop()
-            n_components = len(re.findall("\w+", upload_path))
+            n_components = len(upload_path.split(os.sep))
         except:
-            n_components = len(re.findall("\w+", server_cfg.client_upload_path))
+            n_components = len(server_cfg.client_upload_path.split(os.sep))
 
         cmd = "tar --strip-components %d -xjf %s -C %s" % (n_components, file_name, dir_name)
         result = commands.getstatusoutput(cmd)
@@ -146,10 +146,10 @@ def un_tarbzip(server_cfg):
     os.unlink(tmp_marker_file)
     if not os.path.isfile(marker_file):
          try:
-	    open(marker_file,"w").close()
-	    os.chmod(marker_file, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
-	 except:
-	    syslog.syslog("cann't create marker file")
+            open(marker_file,"w").close()
+            os.chmod(marker_file, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+         except:
+            syslog.syslog("cann't create marker file")
     # return uniq ip list (duplicate ips may be there due to twice upload in one slot)
     return list(set(dir_list))
 
@@ -194,3 +194,4 @@ if __name__ == "__main__":
     if not status:
         print ",".join(client_ips) # This ip list will be used while processing at 5 min interval
     sys.exit(status)
+

@@ -43,7 +43,7 @@ class CFG:
 
     def __init__(self):
         setattr(self, "run_id", int(time.time()))
-	setattr(self, "aggregate_all", 1)
+        setattr(self, "aggregate_all", 1)
 
     def set_option(self, option, value):
         setattr(self, option, value)
@@ -140,8 +140,8 @@ def segregate_profiles(server_cfg, dir_list):
 
             # This is the file that generated the profile
             php_source = name_components[-2]
-	    if name_components[0][0] =='H':
- 		php_source= "^"+php_source
+            if name_components[0][0] =='H':
+                 php_source= "^"+php_source
             # Complete path to the profile
             source_file = os.path.join(profile_ip_dir, file_name)
 
@@ -157,14 +157,14 @@ def segregate_profiles(server_cfg, dir_list):
                 profile_files[php_source] = []
 
             # Sym-link the profile and add to dictionary
-	    # Checking for already existing links(for backfill purpose)
-	    if(not os.path.isfile(target_file)):
+            # Checking for already existing links(for backfill purpose)
+            if(not os.path.isfile(target_file)):
                 os.symlink(source_file, target_file)
-	
-	    # We have to take the absolute path, otherwise there are some // instead of /
-	    # Slow pages moveing returns a list of profiles with their absolute path, 
-	    # so comparison is possible now
-	    target_file = os.path.abspath(target_file)
+        
+            # We have to take the absolute path, otherwise there are some // instead of /
+            # Slow pages moveing returns a list of profiles with their absolute path, 
+            # so comparison is possible now
+            target_file = os.path.abspath(target_file)
             profile_files[php_source].append(target_file)
 
     return  profile_files
@@ -179,18 +179,18 @@ def slow_pages_cleanup(server_cfg, game_name, time_slot, profile_list):
     result = commands.getstatusoutput(cmd)
     # print result
     if (result[0] != 0):
-        print "could not move slow pages"
-	return
+        syslog.syslog("could not move slow pages")
+        return profile_list
     for profile in eval(result[1]):
-	profile = profile.replace("\\", "");
-	name_components = profile.split(":")
-	php_source = name_components[len(name_components) - 2]
-	if( profile_list[php_source].count(profile)  > 0):
-		profile_list[php_source].remove(profile)
-		
-	# This is required because otherwise if all the profiles for a page are slow,
-	# the slot will appear as partially profiled instead of completely profiled.
-	if( len(profile_list[php_source]) == 0):
+        profile = profile.replace("\\", "");
+        name_components = profile.split(":")
+        php_source = name_components[len(name_components) - 2]
+        if( profile_list[php_source].count(profile)  > 0):
+                profile_list[php_source].remove(profile)
+                
+        # This is required because otherwise if all the profiles for a page are slow,
+        # the slot will appear as partially profiled instead of completely profiled.
+        if( len(profile_list[php_source]) == 0):
                 profile_list.pop(php_source)
     return profile_list
 
@@ -202,8 +202,8 @@ def aggregate_all(server_cfg, page_list):
     # If all the profiles for all the pages for a timeslot are slow,
     # then we dont have anything to aggregate, so skipping.
     if (len(page_list) == 0):
-	return True
-	
+        return True
+        
     # Create the 'blob_dir'
     blobdir = os.path.join(server_cfg.upload_path, server_cfg.blob_dir) 
     if(not os.path.exists(blobdir)): os.mkdir(blobdir);
@@ -256,7 +256,7 @@ def aggregate_all(server_cfg, page_list):
 #
 def create_manifest(server_cfg, page_list):
 
-    blobdir = os.path.join(server_cfg.upload_path, server_cfg.blob_dir)	
+    blobdir = os.path.join(server_cfg.upload_path, server_cfg.blob_dir)        
     manifest = {}
     # creating the manifest file to be read in by the UI 
     memory_profilied_pages = 0
@@ -337,21 +337,21 @@ def parse_and_store_arguments(cfg):
         pass
     for o,v in args:
         if o == "-g":
-	   cfg.set_option("game_name", v)
-	elif o == "-t":
-	   cfg.set_option("run_id", v)
-	elif o == "--no-aggregate":
-	   cfg.set_option("aggregate_all", 0)
-	elif o == "-d":
-	   cfg.set_option("upload_path", v)
-	elif o == "--ip_list":
-	   cfg.set_option("ip_list", v.split(","));
+           cfg.set_option("game_name", v)
+        elif o == "-t":
+           cfg.set_option("run_id", v)
+        elif o == "--no-aggregate":
+           cfg.set_option("aggregate_all", 0)
+        elif o == "-d":
+           cfg.set_option("upload_path", v)
+        elif o == "--ip_list":
+           cfg.set_option("ip_list", v.split(","));
         else:
            pass
 
     if not hasattr(cfg, "game_name"):
         print "game name is not passed"
-	return None
+        return None
     return cfg
 
 def set_default_upload_path(server_cfg):
@@ -416,7 +416,7 @@ if __name__ == "__main__":
     status = 37
     try:
         server_cfg = get_server_config(server_config_file)
-	server_cfg = parse_and_store_arguments(server_cfg)
+        server_cfg = parse_and_store_arguments(server_cfg)
         status = main(server_cfg)
     except:
         info = sys.exc_info()
@@ -429,3 +429,4 @@ if __name__ == "__main__":
 
     # print sys.argv[0], "exiting with status: ", status
     sys.exit(status)
+
