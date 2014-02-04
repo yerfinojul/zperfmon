@@ -1,0 +1,90 @@
+#!/bin/bash
+
+#
+# Copyright 2013 Zynga Inc.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+# 
+#    http://www.apache.org/licenses/LICENSE-2.0
+# 
+#    Unless required by applicable law or agreed to in writing, software
+#      distributed under the License is distributed on an "AS IS" BASIS,
+#      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+# 
+
+GAME=$1
+ID=$2
+DEPLOYID=$3
+IP=$4
+
+function usage() 
+{
+    echo "Usage: zperfmon-add-rsinstance game id deployid ip";
+}
+
+if [ -z ${GAME} ]; then
+    usage
+    echo "I need a game name as parameter, aborting."
+    exit
+fi
+
+if [ -z ${ID} ]; then
+    usage
+    echo "I need an ID as parameter, aborting."
+    exit	
+fi 
+
+if [ -z ${DEPLOYID} ]; then
+    usage
+    echo "I need an DEPLOYID as parameter, aborting."
+    exit    
+fi 
+
+if [ -z ${IP} ]; then
+    usage
+    echo "I need an IP as parameter, aborting."
+    exit    
+fi 
+
+if [ ! -f "/etc/zperfmon/conf.d/$GAME.cfg" ]; then
+	echo "Could not find /etc/zperfmon/conf.d/$GAME.cfg";
+	exit 1
+fi
+
+get_config_key() {
+	KEY=$1;
+	php -r "include '/etc/zperfmon/conf.d/$GAME.cfg'; \$cfg = \$game_cfg['$GAME']; echo \$cfg['$KEY'];"
+}
+
+DB_USER=$(get_config_key db_user)
+DB_PASS=$(get_config_key db_pass)
+DB_HOST=$(get_config_key db_host)
+
+AUX="-u ${DB_USER} --password=${DB_PASS} -h ${DB_HOST}"
+DB_CRED=${AUX//$'\n'/}
+DB_CMDS=`mktemp /tmp/db_create_cmds.XXXXXX`
+
+cat > ${DB_CMDS} <<EOF
+
+    use rightscale;
+
+    insert into instances(cloud_id, deploy_id, deploy_name, array_id, array_name, hostname, hostgroup, type, status, public_ip, private_ip, aws_id) 
+    values (1, $DEPLOYID, 'deploy_$DEPLOYID', $ID, '$GAME$ID', '$GAME$ID', '$GAME', 'C1.MEDIUM' , 'RUNNING', '$IP', '$IP', 'awd_1');
+
+EOF
+
+cat ${DB_CMDS}
+
+cat ${DB_CMDS} | mysql ${DB_CRED}
+
+if [ $? -gt 0 ]; then
+    echo "Failed to insert instance"
+    rm ${DB_CMDS}
+    exit
+fi
+
+rm ${DB_CMDS}

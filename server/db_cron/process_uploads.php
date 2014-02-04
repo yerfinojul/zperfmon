@@ -28,8 +28,6 @@
 
 ini_set('memory_limit', '48M');
 
-error_reporting(E_ALL|E_STRICT);
-
 include_once 'server.cfg';
 include_once 'game_config.php';
 include_once 'logger.inc.php';

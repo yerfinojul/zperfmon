@@ -16,7 +16,7 @@
 #    limitations under the License.
 # 
 
-source taskset.conf
+source /usr/local/zperfmon/bin/taskset.sh
 
 TIME=`date +%s`
 

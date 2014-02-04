@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(E_STRICT|E_ALL);
 date_default_timezone_set('UTC');
 
 function log_msg($str, $log_file)

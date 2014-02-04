@@ -61,15 +61,7 @@ if [ $ARRAY = true ]; then
 	GAME=$GAME"_"$ARRAYID
 fi
 
-# Check game name validity (BUG number SEG1898)
-if [[ ! ${GAME} =~ "^[a-zA-Z]+[a-zA-Z_0-9]*$" ]]
-then
-        echo "Given game name is not valid!!!"
-	echo "exiting..."
-	exit 
-fi
-
-ROOT_DIR=$(php -r "include_once 'server.cfg'; echo \$server_cfg['root_upload_directory'];"  | sed 's/\(.zperfmon\/\)\(.*\)/\1/')
+ROOT_DIR=db/zperfmon
 
 if [ $ARRAY = false ]; then
 
@@ -101,6 +93,8 @@ s/__db_name_for_game__/zprf_${GAME}/' ${TARGET}/etc/zperfmon/conf.d/game.cfg >  
 EOF
 
 fi
+
+#sed -e 's/__id_of_game__/${DEPLOYID}/' ${TARGET}/etc/zperfmon/conf.d/game.cfg >  ${TARGET}/etc/zperfmon/conf.d/${GAME}.cfg;
 
 if [ $ARRAY = true ]; then
 
@@ -151,7 +145,7 @@ rm ${CMDS_TO_RUN}
 
 echo "Running DB creation script for ${GAME}"
 
-sudo -u nobody /bin/bash $BINPATH/zperfmon-create-gamedb ${_GAME} ${ARRAYID}
+/bin/bash $BINPATH/zperfmon-create-gamedb ${_GAME} ${ARRAYID}
 
 if test -z "$ARRAYID"; then
 	php -r "include_once 'create_array_games.php'; include_once 'server.cfg'; \$cag = new CreateArrrayGames(\$server_cfg);\$cag->make_array_games('$GAME','$DEPLOYID');"

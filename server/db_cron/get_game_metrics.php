@@ -26,8 +26,6 @@
 
 ini_set('memory_limit', '48M');
 
-error_reporting(E_ALL|E_STRICT);
-
 include_once 'server.cfg';
 include_once 'get_apache_metrics.php';
 include_once 'get_top5_functions.php';

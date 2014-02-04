@@ -30,7 +30,6 @@ include_once 'XhProfDAO.php';
 //include_once 'spyc.php';
 include_once 'yml_conf.inc.php';
 ini_set('memory_limit', '1G');
-error_reporting(E_ALL|E_STRICT);
 
 
 function get_eu_cfg($eu_conf_file)

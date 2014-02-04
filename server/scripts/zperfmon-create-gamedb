@@ -55,7 +55,9 @@ DB_HOST=$(get_config_key db_host)
 DB_R_USER=$(get_config_key rpt_user)
 DB_R_PASS=$(get_config_key rpt_pass)
 
-DB_CRED="-u ${DB_USER} -p${DB_PASS} -h ${DB_HOST}"
+AUX="-u ${DB_USER} --password=${DB_PASS} -h ${DB_HOST}"
+DB_CRED=${AUX//$'\n'/}
+
 
 cat > ${DB_CMDS} <<EOF
 
@@ -88,7 +90,7 @@ if [ $? -gt 0 ]; then
     exit
 fi
 
-mysql -u ${DB_USER} -p${DB_PASS} -h ${DB_HOST} -Dzprf_${GAME} -e "show tables;"
+mysql ${DB_CRED} -Dzprf_${GAME} -e "show tables;"
 
 if [ $? -gt 0 ]; then
     echo "Failed to create DB zprf_${GAME} or associated user account"

@@ -28,8 +28,6 @@ $per_game_config_path = "/etc/zperfmon/conf.d/";
 
 ini_set('memory_limit', '1G');
 
-error_reporting(E_ALL|E_STRICT);
-
 $selfPath = dirname(realpath(__FILE__));
 set_include_path(get_include_path() . ":$game_config_path:$per_game_config_path");
 

@@ -17,7 +17,6 @@
 # 
 
 
-error_reporting(E_STRICT|E_ALL);
 date_default_timezone_set('UTC');
 
 include_once "server.cfg";

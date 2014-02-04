@@ -16,7 +16,7 @@
 #    limitations under the License.
 # 
 
-source taskset.conf
+source /usr/local/zperfmon/bin/taskset.sh
 
 # run this script to update the report db to have any new classes
 $TASKSET_GROUP1 /usr/bin/php /usr/local/zperfmon/bin/update_report_hostgroup.php
