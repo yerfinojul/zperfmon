@@ -116,7 +116,7 @@ if(!isset($arrayid)){
               <textarea id='host_count' readonly></textarea>
               </div>";
 	
-	$summary_data = get_instance_count_slack_offset($game);
+	$summary_data = array(); //get_instance_count_slack_offset($game);
 //	foreach($hostgroups_array as $hostgroups){
 	foreach($final_yaml_array as $regex=>$metric){
 		$hostgroups = $metric["hostgroup"];

@@ -199,7 +199,7 @@ zPerfmon.Charts = function(qGame, qArray, tabId) {
 
 	function createLineChart(el, data, options) {
 		var g_data = new google.visualization.DataTable();
-
+		var colCount = 1 + oData.cols.length;
 		g_data.addColumn('datetime', 'Timestamp', "ts");
 		for(var j = 1; j < oData.cols.length; j++) {
 			g_data.addColumn("number", oData.cols[j], oData.cols[j]);
@@ -212,12 +212,14 @@ zPerfmon.Charts = function(qGame, qArray, tabId) {
 		for (var j = 0; j < oData.rows.length; j++) {
 
 			row = oData.rows[j];
-			ev_ts = row[0];
-			row[0] = new Date(ev_ts * 1000);
+			if (!(row[0] instanceof Date)) {
+				ev_ts = row[0];
+				row[0] = new Date(ev_ts * 1000);
+			}
 
 			if (ev_ts in tag_hash) {
 				row.push(tag_hash[ev_ts]);
-			} else {
+			} else if (row.length < colCount) {
 				row.push(null);
 			}
 
