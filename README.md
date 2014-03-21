@@ -112,7 +112,7 @@ ServerName zperfmon
 ### Configure php.ini
 ```
 Make php report to syslog instead of stdout (error_log = syslog) 
-Increase max_upload_size in php.ini to 100mb or something (upload_max_filesize = 100M)
+Increase max_upload_size in php.ini to 100mb or similar (upload_max_filesize = 100M)
 ```
 
 ### Configure mysql
@@ -139,7 +139,7 @@ Configure /etc/zperfmon/report.ini
 zperfmon-create-eudb.php
 zperfmon-create-report.php
 zperfmon-create-rsdb.php
-zperfmon-add-game web
+zperfmon-add-game game_name
 ``` 
 
  
