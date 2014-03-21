@@ -63,8 +63,8 @@ go up without user count increasing?" is answered by the [business tab][bd-dash]
 [bd-dash]: server/web_ui/bd-view/bd-view.html
 
 
-Server - Installation instructions on fresh CentOS 6.3
-========================================================
+Installation instructions on fresh CentOS 6.3
+=============================================
 
 ### Vagrant
 
