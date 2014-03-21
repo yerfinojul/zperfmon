@@ -61,3 +61,85 @@ go up without user count increasing?" is answered by the [business tab][bd-dash]
 [profile-view-unagg]: server/web_ui/profile-view/ipview.php
 [top-5-functions]: server/web_ui/top5-view/top5-view.php
 [bd-dash]: server/web_ui/bd-view/bd-view.html
+
+
+Server - Installation instructions on fresh CentOS 6.3
+========================================================
+
+### Vagrant
+
+```bash
+vagrant init zperfmon https://dl.dropbox.com/u/7225008/Vagrant/CentOS-6.3-x86_64-minimal.box
+vagrant up
+vagrant ssh
+sudo su -
+```
+
+### Install dependencies
+```bash
+yum -y install httpd php mysql mysql-server php-mysql make git curl graphviz rpm-build vim php-pear php-devel httpd-devel pcre-devel symlinks vixie-cron
+pecl install apc
+echo "extension=apc.so" > /etc/php.d/apc.ini
+pecl install igbinary
+echo "extension=igbinary.so" > /etc/php.d/igbinary.ini
+ 
+# Dependency: gearmand (http://www.rackspace.com/knowledge_center/article/installing-rhel-epel-repo-on-centos-5x-or-6x)
+wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+rpm -Uvh epel-release-6*.rpm
+yum install gearmand
+Get the code
+```
+
+### Install zperfmon
+```bash
+git clone https://github.com/yerfinojul/zperfmon.git
+cd zperfmon/server
+make rpm
+rpm --install /root/rpmbuild/RPMS/x86_64/zperfmon-server-1.0.9.5-5.3.3.x86_64.rpm
+```
+
+### Configure network (vagrant only?)
+
+```
+iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+service iptables save
+Configure apache
+vim /etc/httpd/conf/httpd.conf
+ServerName zperfmon
+/usr/sbin/apachectl restart
+```
+
+### Configure php.ini
+```
+Make php report to syslog instead of stdout (error_log = syslog) 
+Increase max_upload_size in php.ini to 100mb or something (upload_max_filesize = 100M)
+```
+
+### Configure mysql
+```
+/etc/init.d/mysqld start
+/usr/bin/mysqladmin -u root password 'somepass'
+/usr/bin/mysqladmin -p -u root -h localhost.localdomain password 'somepass'
+```
+ 
+```
+Edit /etc/my.cnf and add
+max_allowed_packet=500M
+```
+
+### Configure zperfmon
+```
+Configure sample /etc/zperfmon/conf.d/game.cfg and /etc/zperfmon/server.cfg
+Configure /etc/zperfmon/rs.ini
+Configure /etc/zperfmon/report.ini
+```
+
+### Execute scripts to create game
+```
+zperfmon-create-eudb.php
+zperfmon-create-report.php
+zperfmon-create-rsdb.php
+zperfmon-add-game web
+``` 
+
+ 
